@@ -1,3 +1,4 @@
 Mission Name: Operation Quiet Room
 Status: Started
 Leader: Unknown
+Location: Training Base
