@@ -1,3 +1,8 @@
+import logging
+from rectangle import Rectangle
+from circle import Circle
+from square import Square
+
 
 class ShapeManager:
     def __init__(self):
@@ -6,6 +11,13 @@ class ShapeManager:
 
     def create_shape(self, shape):
         pass
+
+
+
+
+
+
+
 
     def get_all_shapes(self):
         pass
@@ -21,3 +33,22 @@ class ShapeManager:
 
     def load_from_json(self):
         pass
+
+
+
+def get_logger():
+    l = logging.getLogger('shapes')
+    l.setLevel(logging.DEBUG)
+
+    file_handler = logging.FileHandler("shape_manager.log", encoding="utf-8")
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+    )
+
+    file_handler.setFormatter(formatter)
+    l.addHandler(file_handler)
+
+    return l
+
+
+

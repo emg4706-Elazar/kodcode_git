@@ -1,8 +1,10 @@
 
+
+
 class Shape:
-    def __init__(self, shape_id, shape_type):
-        self.id = shape_id
-        self.shape_type = shape_type
+
+    def __init__(self):
+        pass
 
     def get_area(self):
         pass
@@ -12,3 +14,4 @@ class Shape:
 
     def to_dict(self):
         pass
+
