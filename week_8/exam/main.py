@@ -1,5 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
+
+import db
 from weapons_manager import *
 from pydantic import BaseModel
 from logging_config import logger
@@ -43,7 +45,7 @@ def post_weapon(body: Item):
 
 
 
-@app.put("/weapon/{id}")
+@app.put("/weapons/{id}")
 def put_weapon(id: int, new_data: Item):
     logger.info("put weapon started")
     # Check if id is existed
@@ -63,7 +65,7 @@ def put_weapon(id: int, new_data: Item):
                             detail=f"The put process failed, {e}")
 
 
-@app.delete("/weapon/{id}")
+@app.delete("/weapons/{id}")
 def delete_weapon(id: int):
     logger.info("delete weapon started")
     # Check if id is existed
@@ -86,15 +88,40 @@ def get_weapons_by_condition(condition: str):
     logger.info("get weapons_by condition started")
     try:
         sorted_weapons = manager.get_by_cond(condition)
+        # in case there no condition like this
+        if not sorted_weapons:
+            raise HTTPException(status_code=404,
+                                detail=f"Process failed. '{condition}' condition, not found")
+        # weather it found
         logger.info("get weapons by condition was success")
         return sorted_weapons
-    except KeyError:
-        raise HTTPException(status_code=404,
-                            detail=f"Process failed. '{condition}' condition, not found")
-
+    # otherwise
     except Exception as e:
-        raise HTTPException(status_code=422,
+        raise HTTPException(status_code=404,
                             detail=f"GET request failed. {e}")
+
+
+@app.get("/weapons/combat-ready")
+def get_weapons_by_ready(type: str):
+    logger.info("get weapons by ready started")
+    try:
+        weapons_by_new = manager.get_by_cond("new")
+        weapons_by_good = manager.get_by_cond("good")
+        sorted_weapons = weapons_by_new[:] + weapons_by_good[:]
+        # in case there no condition like this
+        if not sorted_weapons:
+            raise HTTPException(status_code=404,
+                                detail=f"'new' or good condition, not found")
+        ready_weapons = manager.get_by_ready(type, sorted_weapons)
+        if not ready_weapons:
+            raise HTTPException(status_code=404,
+                                detail=f"type such as '{type}', was not found")
+        return ready_weapons
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"process failed. {e}")
+
+
+
 
 
 
@@ -107,6 +134,12 @@ def get_weapon_by_id(id: int):
 
     raise HTTPException(status_code=404,
                         detail=f"This id is not found")
+
+
+
+@app.get("/weapons/schema")
+def get_schema():
+    return db.get_schema()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

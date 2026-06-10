@@ -98,7 +98,7 @@ def add_task(filename, description):
             f.write(f"{new_id}|PENDING|{description}\n")
     except FileNotFoundError:
         print(f"'{filename}' not found")
-    
+
     return
 
 

@@ -90,12 +90,22 @@ class IntelMessagesDAL:
         return None
 
     # ----------------------------------------------------------------- create
-    def create(self, unit: str, classification: str, content: str, source: str
-    | None)-> int:
-        # Insert a new row (do NOT pass created_at — let MySQL set it)
-        # Commit the transaction
-        # Return the auto-generated id (lastrowid)
-        ...
+    def create(self, unit: str, classification: str,
+               content: str, source: str | None)-> int:
+        conn = self.get_conn()
+        cursor = conn.cursor(dictionary=True)
+        sql = """
+        INSERT INTO intel_messages (unit, classification, content, source)
+        VALUES (%s, %s, %s, %s);
+        """
+        values = (unit, classification, content, source)
+        cursor.execute(sql, values)
+        new_id = cursor.lastrowid
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return new_id
+
     # ----------------------------------------------------------------- update
     def update(self, message_id: int, data: dict)-> bool:
         # Build a dynamic SET clause from the keys in data
@@ -105,11 +115,19 @@ class IntelMessagesDAL:
         # Never use f-strings for values — only %s
         ...
     # ----------------------------------------------------------------- delete
-    def delete(self, message_id: int)-> bool:
-        # Delete the row where id = message_id
-        # Commit the transaction
-        # Return True if a row was deleted, False if the id did not exist
-        ...
+    def delete(self, message_id: int):#-> bool:
+        conn = self.get_conn()
+        cursor = conn.cursor()
+        sql = """
+        DELETE FROM intel_messages WHERE id = %s;
+        """
+        cursor.execute(sql, (message_id,))
+        conn.commit()
+        deleted = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return bool(deleted)
+
     # --------------------------------------------------------------- queries
     def get_by_unit(self, unit: str)-> list[dict]:
         # All messages where unit matches, ordered by created_at DESC
@@ -139,4 +157,6 @@ if __name__ == "__main__":
                               "secret","soldiers_db",l1)
     for row1 in im_dal.get_all():
         print(row1)
-    print(im_dal.get_by_id(13))
+    print(im_dal.delete(13))
+    for row1 in im_dal.get_all():
+        print(row1)

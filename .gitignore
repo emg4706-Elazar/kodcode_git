@@ -1,2 +1,6 @@
 .idea/
 .venv/
+*.txt
+
+week_7/oop/shape_manager_project/dockstring.py
+*.log

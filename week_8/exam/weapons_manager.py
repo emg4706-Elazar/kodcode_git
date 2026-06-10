@@ -64,10 +64,19 @@ class WeaponsManager:
         return sorted_weapons
 
 
+    def get_by_ready(self, type, lst):
+        all_weapons = self.weapons
+        sorted_weapons = []
+        for w in all_weapons:
+            if w["type"] == type and w["condition"] == "new" or "good":
+                sorted_weapons.append(w)
+        return sorted_weapons
+
+
 
     def save_to_json(self):
         with open("weapons.json", "w", encoding="utf-8") as f:
-            json.dump(self.weapons, f)
+            json.dump(self.weapons, f, indent=4)
 
 
     def load_from_json(self):
