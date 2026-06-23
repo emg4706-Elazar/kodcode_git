@@ -19,13 +19,28 @@ namespace SourcesManagement
 
         static void Main()
         {
+            bool isRun = true;
+            while (isRun)
+            {
+                PrinterMenu();
+                int choice = GetChoice();
+
+                switch (choice)
+                {
+                    case 1:
+                        ids.Add(GetId());
+                        lables.Add(GetLable());
+                        strengthes.Add(GetStrength());
+                        Console.WriteLine("New source was created successfully\n");
+                        break;
+                    case 2:
+                        isRun = false;
+                        Console.WriteLine("\nEnd");
+                        break;
+                }
+            }
             
-            ids.Add(GetId());
-            lables.Add(GetLable());
-            strengthes.Add(GetStrength());
-
-
-
+            
         }
 
 
@@ -105,7 +120,7 @@ namespace SourcesManagement
 
         static void PrinterMenu()
         {
-            Console.WriteLine("===== Nenu =====");
+            Console.WriteLine("  ======== Nenu ========");
             Console.WriteLine("1. Log new transmission");
             Console.WriteLine("2. Exit");
         }
@@ -117,7 +132,21 @@ namespace SourcesManagement
             {
                 Console.WriteLine("\nEnter your choice: ");
                 string choice = Console.ReadLine();
+                int validChoice;
+                isValid = int.TryParse(choice, out validChoice);
+                if (!isValid || (validChoice > 3 && validChoice <= 0))
+                {
+                    Console.WriteLine("Wrong number. Please try again...\n");
+                }
+                else
+                {
+                    return validChoice;
+                }
+
             }
+            // default int 
+            return 1;
+        
 
         }
     }
