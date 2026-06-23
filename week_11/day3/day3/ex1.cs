@@ -10,12 +10,12 @@ namespace SourcesManagement
         {
             freindly,
             hostile,
-            stil_unidentified
+            still_unidentified
         }
 
         static List<int> ids = [];
-        static List<Classification> lables = [];
-        static List<int?> strengthes = [];
+        static List<Classification> labels = [];
+        static List<int?> strengths = [];
 
         static void Main()
         {
@@ -29,18 +29,20 @@ namespace SourcesManagement
                 {
                     case 1:
                         ids.Add(GetId());
-                        lables.Add(GetLable());
-                        strengthes.Add(GetStrength());
+                        labels.Add(GetLable());
+                        strengths.Add(GetStrength());
                         Console.WriteLine("New source was created successfully\n");
                         break;
-                    case 2:
+                    case 3:
+                        DisplayAllSources(ids, labels, strengths);
+                        break;
+
+                    case 4:
                         isRun = false;
                         Console.WriteLine("\nEnd");
                         break;
                 }
             }
-            
-            
         }
 
 
@@ -63,7 +65,6 @@ namespace SourcesManagement
                 {
                     return validId;
                 }
-
             }
             // default int 
             return 1;
@@ -88,9 +89,9 @@ namespace SourcesManagement
                 {
                     return validLable;
                 }
-
             }
             return default(Classification);
+
         }
         static int GetStrength()
         {
@@ -111,7 +112,6 @@ namespace SourcesManagement
                 {
                     return validStrength;
                 }
-
             }
             // default int 
             return 1;
@@ -120,38 +120,44 @@ namespace SourcesManagement
 
         static void PrinterMenu()
         {
-            Console.WriteLine("  ======== Nenu ========");
-            Console.WriteLine("1. Log new transmission");
-            Console.WriteLine("2. Exit");
+            Console.WriteLine("\n  ======== Menu ========");
+            Console.WriteLine("1. Log a new transmission");
+            Console.WriteLine("2. Calibrate the strength");
+            Console.WriteLine("3. Desplay all sources");
+            Console.WriteLine("4. Exit");
         }
+
 
         static int GetChoice()
         {
-            bool isValid = false;
-            while (!isValid)
+            while (true)
             {
                 Console.WriteLine("\nEnter your choice: ");
                 string choice = Console.ReadLine();
                 int validChoice;
-                isValid = int.TryParse(choice, out validChoice);
-                if (!isValid || (validChoice > 3 && validChoice <= 0))
+                bool isValid = int.TryParse(choice, out validChoice);
+                // Its behavior not clear
+                if (!isValid || (validChoice > 4 || validChoice <= 0))
                 {
                     Console.WriteLine("Wrong number. Please try again...\n");
+                    continue;
                 }
-                else
-                {
-                    return validChoice;
-                }
-
+                return validChoice;
             }
-            // default int 
-            return 1;
         
+        }
 
+        static void DisplayAllSources(List<int> ids,
+            List<Classification> labels, List<int?>strengths)
+        {
+            int length = ids.Count;
+            for (int i = 0; i < length; i++)
+            {
+                Console.WriteLine($"\nID: {ids[i]} |" +
+                    $" Classification: {labels[i]} | Strength: {strengths[i]}");
+            }
         }
     }
-    
-    
 }
 
 
