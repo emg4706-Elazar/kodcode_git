@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 
 namespace TrackedPlatform
@@ -21,10 +20,11 @@ namespace TrackedPlatform
             get => _speedKnots;
             set
             {
-                if (value >= 0)
+                if (value < 0)
                 {
-                    _speedKnots = value;
+                    throw new ArgumentException("The 'Speed' must be more than 0.");
                 }
+                _speedKnots = value;
             }
         }
         public double Heading
@@ -32,10 +32,11 @@ namespace TrackedPlatform
             get => _heading;
             set
             {
-                if (value >= 0 && value <= 359)
+                if (value < 0 || value > 359)
                 {
-                    _heading = value;
+                    throw new ArgumentException("The 'heading' must be between 0 and 359.");
                 }
+                _heading = value;
             }
         }
 
@@ -50,30 +51,43 @@ namespace TrackedPlatform
         public abstract bool IsTrackable();
         public override string ToString()
         {
-            return $"Platform: Air | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots} | Heading: {Heading}";
+            return $"TrackId: #{TrackId}| SpeedKnots: {SpeedKnots} | Heading: {Heading}";
         }
     }
 
     class AirPlatform: Platform
     {
         private double _altitudeFeet;
+        public double AltitudeFeet
+        {
+            get => _altitudeFeet;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The 'AltitudeFeet' must be more than 0.");
+                }
+                _altitudeFeet = value;
+            }
+        }
+        
 
         public AirPlatform(int trackId, double speedKnots, double heading, double altitudeFeet)
             :base(trackId, speedKnots, heading)
         {
-            _altitudeFeet = altitudeFeet;
+            AltitudeFeet = altitudeFeet;
         }
 
         public override string StatusLine()
         {
-            return $"Platform: Air | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | AltitudeFeet: {_altitudeFeet} | IsTrackable:  {IsTrackable()}";
+            return $"Platform: Air | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | AltitudeFeet: {AltitudeFeet} | IsTrackable:  {IsTrackable()}";
         }
         public override bool IsTrackable()
         {
-            if (_altitudeFeet < 100 || _altitudeFeet > 60000) { return false; }
-            if (SpeedKnots < 0) { return false; }
-
-            return true;
+            if (AltitudeFeet >= 100 && AltitudeFeet <= 60000
+                && SpeedKnots > 0) { return true; }
+            
+            return false;          
         }
     }
 
@@ -81,18 +95,31 @@ namespace TrackedPlatform
     {
         private double _depthMeters;
 
+        public double DepthMeters
+        {
+            get => _depthMeters;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("The 'DepthMeters' must be more than 0.");
+                }
+                _depthMeters = value;
+            }
+        }
+
         public SeaPlatform(int trackId, double speedKnots, double heading, double depthMeters)
             :base(trackId, speedKnots, heading)
         {
-            _depthMeters = depthMeters;
+            DepthMeters = depthMeters;
         }
         public override string StatusLine()
         {
-            return $"Platform: Sea | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | DepthMeters: {_depthMeters} | IsTrackable:  {IsTrackable()}";
+            return $"Platform: Sea | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | DepthMeters: {DepthMeters} | IsTrackable:  {IsTrackable()}";
         }
         public override bool IsTrackable()
         {
-            if (_depthMeters < 0 || _depthMeters > 300)
+            if (DepthMeters > 300)
             {
                 return false;
             }
@@ -116,7 +143,7 @@ namespace TrackedPlatform
 
         public override bool IsTrackable()
         {
-            if (_terrainType == "tunnel")
+            if (_terrainType.ToLower().Trim() == "tunnel")
             {
                 return false;
             }
@@ -129,20 +156,20 @@ namespace TrackedPlatform
     {
         static void Main()
         {
-            AirPlatform a1 = new AirPlatform(1, 345.0, 67, 8900);
-            SeaPlatform s1 = new SeaPlatform(2, 45, 8600, 34);
-            GroundPlatform g1 = new GroundPlatform(3, 587, 98, "234");
-            AirPlatform a2 = new AirPlatform(4, -8, 900, 788);
-            SeaPlatform s2 = new SeaPlatform(5, -4, 492, 500);
-            GroundPlatform g2 = new GroundPlatform(6, 90, 123, "tunnel");
 
+            AirPlatform a1 = new AirPlatform(1, 345.0, 67, 8900);          
+            SeaPlatform s1 = new SeaPlatform(2, 45, 300, 34);
+            GroundPlatform g1 = new GroundPlatform(6, 90, 123, "123");
+            AirPlatform a2 = new AirPlatform(4, 34, 250, 50);
+            SeaPlatform s2 = new SeaPlatform(5, 0, 45, 500);
+            GroundPlatform g2 = new GroundPlatform(3, 587, 98, "tunnel");
 
-            List<Platform> listPlms = [ a1, s1, g1, a2, s2, g2 ];
+            List<Platform> listPlms = [a1, s1, g1, a2, s2, g2];
             foreach (Platform pltm in listPlms)
             {
                 Console.WriteLine(pltm.StatusLine());
-                Console.WriteLine(pltm.IsTrackable());
                 Console.WriteLine();
+
             }
         }
     }
