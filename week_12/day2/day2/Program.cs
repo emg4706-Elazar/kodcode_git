@@ -80,7 +80,8 @@ namespace TrackedPlatform
 
         public override string StatusLine()
         {
-            return $"Platform: Air | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | AltitudeFeet: {AltitudeFeet} | IsTrackable:  {IsTrackable()}";
+            return $"Platform: Air | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\n" +
+                $"Heading: {Heading} | AltitudeFeet: {AltitudeFeet} | IsTrackable:  {IsTrackable()}";
         }
         public override bool IsTrackable()
         {
@@ -115,7 +116,8 @@ namespace TrackedPlatform
         }
         public override string StatusLine()
         {
-            return $"Platform: Sea | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\nHeading: {Heading} | DepthMeters: {DepthMeters} | IsTrackable:  {IsTrackable()}";
+            return $"Platform: Sea | TrackId: #{TrackId}| SpeedKnots: {SpeedKnots}\n" +
+                $"Heading: {Heading} | DepthMeters: {DepthMeters} | IsTrackable:  {IsTrackable()}";
         }
         public override bool IsTrackable()
         {

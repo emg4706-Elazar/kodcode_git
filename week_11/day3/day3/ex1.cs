@@ -8,7 +8,7 @@ namespace SourcesManagement
     {
         enum Classification
         {
-            freindly,
+            friendly,
             hostile,
             still_unidentified
         }
@@ -29,7 +29,7 @@ namespace SourcesManagement
                 {
                     case 1:
                         ids.Add(GetId());
-                        labels.Add(GetLable());
+                        labels.Add(GetLabel());
                         strengths.Add(GetStrength());
                         Console.WriteLine("New source was created successfully\n");
                         break;
@@ -48,46 +48,41 @@ namespace SourcesManagement
 
         static int GetId()
         {
-            bool isValid = false;
-
-            while (!isValid)
+            while (true)
             {
                 Console.WriteLine("Enter id: ");
                 string id = Console.ReadLine();
 
                 int validId;
-                isValid = int.TryParse(id, out validId);
+                bool isValid = int.TryParse(id, out validId);
                 if (!isValid)
                 {
                     Console.WriteLine("Wrong input. Please try again...\n");
+                    continue;
                 }
-                else
-                {
-                    return validId;
-                }
+                
+                return validId;
             }
-            // default int 
-            return 1;
         }
         
 
-        static Classification GetLable()
+        static Classification GetLabel()
         {
-            Classification validLable;
+            Classification validLabel;
             bool isValid = false;
 
             while (!isValid)
             {
                 Console.WriteLine("Enter Classification: ");
-                string lable = Console.ReadLine();
-                isValid = Enum.TryParse(lable, true, out validLable);
+                string label = Console.ReadLine();
+                isValid = Enum.TryParse(label, true, out validLabel);
                 if (!isValid)
                 {
                     Console.WriteLine("Wrong classification. Please try again...\n");
                 }
                 else
                 {
-                    return validLable;
+                    return validLabel;
                 }
             }
             return default(Classification);
@@ -123,7 +118,7 @@ namespace SourcesManagement
             Console.WriteLine("\n  ======== Menu ========");
             Console.WriteLine("1. Log a new transmission");
             Console.WriteLine("2. Calibrate the strength");
-            Console.WriteLine("3. Desplay all sources");
+            Console.WriteLine("3. Display all sources");
             Console.WriteLine("4. Exit");
         }
 
