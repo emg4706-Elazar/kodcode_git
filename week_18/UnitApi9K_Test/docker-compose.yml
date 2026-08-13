@@ -1,0 +1,47 @@
+services:
+
+  unitdogdb:
+    image: mysql:latest
+
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: Unit-db
+
+    networks:
+      - intel-net
+
+    volumes:
+      - db-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-psecret"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  unitapi:
+    build: .
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=unitdogdb;Database=Unit-db;Uid=root;Pwd=secret;
+
+    networks:
+      - intel-net
+
+    depends_on:
+      unitdogdb:
+        condition: service_healthy
+
+
+volumes:
+  db-data:
+
+
+networks:
+  intel-net:
+    external: true
