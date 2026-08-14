@@ -24,7 +24,8 @@ public class TrainingSessionsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TrainingSession>> CreateTraining(PostTrainingSessionDTO training)
     {
-        if (training.SessionDate > DateTime.Now)
+        // Validate whether is a future date
+        if (training.SessionDate.Date >= DateTime.Today)
         {
             return BadRequest("Unable to assign a future date");
         }
@@ -62,7 +63,7 @@ public class TrainingSessionsController : ControllerBase
     public async Task<ActionResult<SessionsPagedDTO<SessionDTO>>>
         GetPaged(int page=1, [Range(5, 50)] int pageSize=10)
     {
-        if (page < 0)
+        if (page < 1)
         {
             return BadRequest("Page nust be more then 0.");
         }

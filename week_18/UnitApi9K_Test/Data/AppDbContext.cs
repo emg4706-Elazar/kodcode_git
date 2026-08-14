@@ -42,7 +42,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Dog>()
             .HasOne(d => d.Handler)
             .WithOne(h => h.Dog)
-            .HasForeignKey<Dog>(d => d.HandlerId);
+            .HasForeignKey<Dog>(d => d.HandlerId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<TrainingSession>()
             .HasOne(t => t.Dog)

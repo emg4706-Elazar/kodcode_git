@@ -24,7 +24,7 @@ public class DogsController : ControllerBase
     public async Task<ActionResult<GetDogDTO>> CreateDogAsync(PostDogDTO dog)
     {
         // Validate whether is a future date
-        if (dog.DateOfBirth > DateTime.Now)
+        if (dog.DateOfBirth.Date >= DateTime.Today)
         {
             return BadRequest("Unable to create an object with future date.");
         }
@@ -34,7 +34,7 @@ public class DogsController : ControllerBase
         return CreatedAtAction(
             nameof(GetDogById),
             new { id = created.Id },
-            dog);
+            created);
     }
 
 

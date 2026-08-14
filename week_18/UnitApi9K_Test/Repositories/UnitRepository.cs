@@ -59,6 +59,7 @@ public class UnitRepository : IUnitRepository
             Id = id,
             Name = dog.Name,
             Breed = dog.Breed,
+            MicrochipId = dog.MicrochipId,
             DateOfBirth = dog.DateOfBirth,
             Specialty = dog.Specialty,
             Status = dog.Status
