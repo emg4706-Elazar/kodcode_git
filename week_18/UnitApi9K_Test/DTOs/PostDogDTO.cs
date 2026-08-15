@@ -17,11 +17,9 @@ public class PostDogDTO
     [MaxLength(15)]
     public string MicrochipId { get; set; } = string.Empty;
 
-    [Required]
-    public DateTime DateOfBirth { get; set; }
+    public required DateTime DateOfBirth { get; set; }
 
-    [Required]
-    public SpecialtyTypes Specialty { get; set; }
+    public required SpecialtyTypes Specialty { get; set; }
 
-    public StatusTypes Status { get; set; } = StatusTypes.InTraining;
+    public required StatusTypes Status { get; set; } = StatusTypes.InTraining;
 }

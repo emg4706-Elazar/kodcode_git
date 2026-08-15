@@ -8,5 +8,5 @@ public class SummeryPerformanceDTO
     public string DogName { get; set; } = string.Empty;
     public SpecialtyTypes Specialty { get; set; }
     public int TrainingsCount { get; set; }
-    public double AveragePerformance { get; set; }
+    public double? AveragePerformance { get; set; }
 }

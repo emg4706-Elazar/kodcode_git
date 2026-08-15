@@ -4,6 +4,7 @@ using UnitApi9K.Data;
 using UnitApi9K.DTOs;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using UnitApi9K.Exceptions;
 
 namespace UnitApi9K.Repositories;
 
@@ -19,6 +20,11 @@ public class UnitRepository : IUnitRepository
     // Create new dog
     public async Task<GetDogDTO> CreateDogAsync(PostDogDTO dog)
     {
+        if (await _context.Dogs.AnyAsync(d => d.MicrochipId == dog.MicrochipId))
+        {
+            throw new ExistedMicroshipId();
+        }
+
         var created = new Dog
         {
             Name = dog.Name,
@@ -164,7 +170,7 @@ public class UnitRepository : IUnitRepository
                 Specialty = d.Specialty,
                 TrainingsCount = d.Trainings.Count,
                 AveragePerformance = d.Trainings.Count > 0 ?
-                d.Trainings.Average(t => t.PerformanceScore): 0
+                d.Trainings.Average(t => t.PerformanceScore): null
             }).ToListAsync();
     }
 
@@ -213,7 +219,9 @@ public class UnitRepository : IUnitRepository
             TotalCount = totalCount,
             CurrentPage = page,
             PageSize = pageSize,
-            PagesTotal = pageSize != 0 ? totalCount / pageSize : 0
+            PagesTotal = pageSize != 0 ? 
+            (int)Math.Ceiling((double)totalCount / pageSize) :
+            0
         };
     }
 }

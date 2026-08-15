@@ -3,6 +3,7 @@ using UnitApi9K.DTOs;
 using UnitApi9K.Enums;
 using UnitApi9K.Models;
 using UnitApi9K.Repositories;
+using UnitApi9K.Exceptions;
 
 namespace UnitApi9K.Controllers;
 
@@ -28,13 +29,20 @@ public class DogsController : ControllerBase
         {
             return BadRequest("Unable to create an object with future date.");
         }
+        try
+        {
+            var created = await _repo.CreateDogAsync(dog);
 
-        var created = await _repo.CreateDogAsync(dog);
-
-        return CreatedAtAction(
-            nameof(GetDogById),
-            new { id = created.Id },
-            created);
+            return CreatedAtAction(
+                nameof(GetDogById),
+                new { id = created.Id },
+                created);
+        }
+        catch (ExistedMicroshipId e)
+        {
+            return BadRequest(e.Message);
+        }
+        
     }
 
 
@@ -70,7 +78,7 @@ public class DogsController : ControllerBase
 
 
     // Get summery performance
-    [HttpGet("performance-summery")]
+    [HttpGet("performance-summary")]
     public async Task<ActionResult<IEnumerable<SummeryPerformanceDTO>>>
         GetSummeryPerformance()
     {

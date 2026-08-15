@@ -6,22 +6,17 @@ namespace UnitApi9K.DTOs;
 
 public class PostTrainingSessionDTO
 {
-    [Required]
-    public int DogId { get; set; }
+    public required int DogId { get; set; }
 
-    [Required]
-    public DateTime SessionDate { get; set; }
+    public required DateTime SessionDate { get; set; }
 
-    [Required]
     [Range(1, 300)]
-    public int DurationMinutes { get; set; }
+    public required int DurationMinutes { get; set; }
 
-    [Required]
-    public TrainingTypes TrainingType { get; set; }
+    public required TrainingTypes TrainingType { get; set; }
 
-    [Required]
     [Range(0, 100)]
-    public int PerformanceScore { get; set; }
+    public required int PerformanceScore { get; set; }
 
     [Required]
     [MaxLength(100)]
