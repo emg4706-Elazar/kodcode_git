@@ -25,7 +25,7 @@ public class TrainingSessionsController : ControllerBase
     public async Task<ActionResult<TrainingSession>> CreateTraining(PostTrainingSessionDTO training)
     {
         // Validate whether is a future date
-        if (training.SessionDate >= DateTime.Now)
+        if (training.SessionDate.Date > DateTime.Today)
         {
             return BadRequest("Unable to assign a future date");
         }

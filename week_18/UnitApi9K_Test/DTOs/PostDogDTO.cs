@@ -21,5 +21,5 @@ public class PostDogDTO
 
     public required SpecialtyTypes Specialty { get; set; }
 
-    public required StatusTypes Status { get; set; } = StatusTypes.InTraining;
+    public StatusTypes Status { get; set; } = StatusTypes.InTraining;
 }
