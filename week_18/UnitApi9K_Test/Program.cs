@@ -24,6 +24,15 @@ builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 
 var app = builder.Build();
 
+// Update migrations in the database
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    await db.Database.MigrateAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

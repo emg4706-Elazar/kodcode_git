@@ -22,7 +22,7 @@ public class TrainingSessionsController : ControllerBase
 
     // Create new training session
     [HttpPost]
-    public async Task<ActionResult<TrainingSession>> CreateTraining(PostTrainingSessionDTO training)
+    public async Task<ActionResult<GetTrainingSessionDTO>> CreateTraining(PostTrainingSessionDTO training)
     {
         // Validate whether is a future date
         if (training.SessionDate.Date > DateTime.Today)

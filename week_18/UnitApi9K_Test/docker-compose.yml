@@ -1,14 +1,11 @@
 services:
-
   unitdogdb:
     image: mysql:latest
+    container_name: UnitDb
 
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: Unit-db
-
-    networks:
-      - intel-net
 
     volumes:
       - db-data:/var/lib/mysql
@@ -22,26 +19,18 @@ services:
 
   unitapi:
     build: .
+    container_name: UnitApi
 
     ports:
       - "8080:8080"
 
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=unitdogdb;Database=Unit-db;Uid=root;Pwd=secret;
-
-    networks:
-      - intel-net
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=unitdogdb;Database=Unit-db;Uid=root;Pwd=secret;"
 
     depends_on:
       unitdogdb:
         condition: service_healthy
 
-
 volumes:
   db-data:
-
-
-networks:
-  intel-net:
-    external: true
